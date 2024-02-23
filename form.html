@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>File Upload Form</title>
+    <style>
+        body, html {
+            height: 100%;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+        }
+
+        form {
+            width: 50%;
+            border: 1px solid #ccc;
+            padding: 20px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            background-color: #f9f9f9;
+        }
+
+        input, select {
+            width: 100%;
+            padding: 10px;
+            margin: 10px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            box-sizing: border-box;
+        }
+
+        input[type="submit"] {
+            background-color: #4CAF50;
+            color: white;
+            cursor: pointer;
+        }
+
+        input[type="submit"]:hover {
+            background-color: #45a049;
+        }
+
+        .success-message {
+            color: green;
+            margin-top: 15px;
+        }
+
+        .grey-button {
+            background-color: grey;
+            color: white;
+            cursor: pointer;
+        }
+
+        .grey-button:hover {
+            background-color: darkgrey;
+        }
+    </style>
+</head>
+<body>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="title">Title:</label><br>
+        <input type="text" id="title" name="title" required><br>
+        <label for="description">Description:</label><br>
+        <input type="text" id="description" name="description" required><br>
+        <label for="file">Select file:</label><br>
+        <input type="file" id="file" name="file" required><br>
+        <label for="bucket">Select Bucket:</label><br>
+        <select name="bucket" id="bucket" required>
+            <option value="Bucket1">Bucket1</option>
+            <option value="Bucket2">Bucket2</option>
+            <option value="Both">Both</option>
+        </select><br>
+        <input type="submit" value="Upload">
+        <input type="button" value="See Files" class="grey-button" onclick="window.location.href='/view'">
+    </form>
+    <div id="success-message" class="success-message"></div>
+
+
+    <script>
+        document.querySelector('form').onsubmit = async (e) => {
+            e.preventDefault(); // Prevent the default form submission
+            const formData = new FormData(e.target);
+            const response = await fetch('/upload', {
+                method: 'POST',
+                body: formData,
+            });
+            if (response.ok) {
+                document.getElementById('success-message').innerText = 'File uploaded successfully. Upload another file?';
+                e.target.reset(); // Reset the form fields
+            } else {
+                document.getElementById('success-message').innerText = 'Upload failed. Please try again.';
+            }
+        };
+    </script>
+</body>
+</html>
